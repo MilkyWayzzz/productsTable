@@ -1,0 +1,47 @@
+<div>
+        <div class="text-center"></div>
+        <h1>Страница редактирования продуктов</h1>
+    </div>
+    <div>
+        <form id="productForm" autocomplete="off">
+            <div>
+                <label for="Name">Наименование продукта:</label>
+                <input type="text" name="Name" id="Name" placeholder="Введите наименование продукта">
+            </div>
+            <div>
+                <label for="Proteins">Белки:</label>    
+                <input type="number" name="Proteins" id="Proteins" placeholder="Введите белки продукта">
+            </div>
+            <div>
+                <label for="Fats">Жиры:</label>  
+                <input type="number" name="Fats" id="Fats" placeholder="Введите жиры продукта">
+            </div>
+            <div>
+                <label for="Сarbohydrates">Углеводы продукта:</label>   
+                <input type="number" name="Сarbohydrates" id="Сarbohydrates" placeholder="Введите углеводы продукта">
+            </div>
+            
+            <div class="form_action--button">
+                <input type="submit" value="Добавить/Изменить">
+            </div>
+        </form>
+        <div>
+            <h2>Таблица продуктов</h2>
+        </div>
+        <div>
+            <table class="list" id="products-list">
+                <thead>
+                    <tr>
+                        <th>Наименование</th>
+                        <th>Белки</th>
+                        <th>Жиры</th>
+                        <th>Углеводы</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>

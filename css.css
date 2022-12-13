@@ -1,0 +1,15 @@
+.pageName {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+h2 {
+    text-align: left;
+    font-weight: bold;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+.col-2 {
+    margin-top: 140px;
+}
