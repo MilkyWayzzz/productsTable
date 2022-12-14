@@ -1,4 +1,5 @@
 var selectedRow = null;
+const pageCountElements = 10;
 const notyf = new Notyf({
     duration : 3000,
     position : {
@@ -7,16 +8,19 @@ const notyf = new Notyf({
     }
 });
 $(document).ready(function(){
-    for(var i= 0; i< localStorage.length; i++){
-        var key = localStorage.key(i);
-        if(key.includes("formData")){
-            var value = localStorage.getItem(key);
-            var product = JSON.parse(value);
-            addProduct(product);
-        } 
-    }
-
+    getCountElementOnTable(pageCountElements);
+    addPageNumbers(pageCountElements);
     TableIsNull();
+
+    $("#firstLi").next()[0].className = "page-item active";
+
+    $("ul").on("click", ".aPageLink", function(){
+        getCountElementOnTable(pageCountElements, $(this)[0].innerText);
+        if($(this).closest("ul").find(".active")[0] != undefined){
+            $(this).closest("ul").find(".active")[0].className = "page-item";
+        }
+        $(this).closest("li")[0].className = "page-item active";
+    });
 
     $("tbody").on("click", ".btnEdit", function(){
         isValid();
@@ -79,6 +83,11 @@ $(document).ready(function(){
             } 
         }
     });
+
+    $(".add100").on("click", function(){
+        random100Table();
+    });
+ 
 });
 
 // document.addEventListener("DOMContentLoaded",function(){
@@ -126,20 +135,22 @@ function readFormData(){
 };
 
 function addProduct(data) {
-    var table = $("tbody")[0];
-    var newRow = table.insertRow(table.lenght);
-    var cell1 = newRow.insertCell(0);
-        cell1.innerHTML = data.Name;
-    var cell2 = newRow.insertCell(1);
-        cell2.innerHTML = data.Proteins;
-    var cell3 = newRow.insertCell(2);
-        cell3.innerHTML = data.Fats;
-    var cell4 = newRow.insertCell(3);
-        cell4.innerHTML = data.Сarbohydrates;
-    var cell5 = newRow.insertCell(4);
-        cell5.innerHTML = `<button class="btn btn-outline-primary btnEdit" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Изменить</button> <button class="btn btn-outline-danger btnDelete">Удалить</button>`; 
-    localStorage.setItem("formData" + data.Name, JSON.stringify(data));   
-    TableIsNull();
+    if(localStorage.getItem("formData"+ data.Name) != data){
+        var table = $("tbody")[0];
+        var newRow = table.insertRow(table.lenght);
+        var cell1 = newRow.insertCell(0);
+            cell1.innerHTML = data.Name;
+        var cell2 = newRow.insertCell(1);
+            cell2.innerHTML = data.Proteins;
+        var cell3 = newRow.insertCell(2);
+            cell3.innerHTML = data.Fats;
+        var cell4 = newRow.insertCell(3);
+            cell4.innerHTML = data.Сarbohydrates;
+        var cell5 = newRow.insertCell(4);
+            cell5.innerHTML = `<button class="btn btn-outline-primary btnEdit" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Изменить</button> <button class="btn btn-outline-danger btnDelete">Удалить</button>`; 
+        localStorage.setItem("formData" + data.Name, JSON.stringify(data));   
+        TableIsNull();
+    } else notyf.error("Данные уже есть в базе");
 };
     
     // selectedRow = td.parentElement.parentElement;
@@ -263,4 +274,59 @@ function checkDataForNull (formData){
         notyf.error('Введены неверные данные!');
     }
     return result;;
-}
+};
+
+function random100Table (){
+    var data = {};
+    for(var i = 1; i <= 100; i++)
+    {
+        data["Name"] = i;//Math.floor(Math.random()*1000+1);
+        var localStorageProduct = JSON.parse(localStorage.getItem("formData" + data.Name));
+        if(localStorageProduct == null){
+            notyf.success("Продукта нету в базе");
+        } else if(localStorageProduct.Name === data.Name){
+            notyf.error("Продукт есть в базе и такой же как новый")
+        } else if(localStorageProduct.Name != data.Name){
+            notyf.success("Продукт есть в базе но не такой же как новый")
+        } 
+        //data["Name"] = Math.floor(Math.random()*1000+1);
+        data["Proteins"] = Math.floor(Math.random()*  000 + 1);
+        data["Fats"] = Math.floor(Math.random() * 1000 + 1);
+        data["Сarbohydrates"] = Math.floor(Math.random() * 1000 + 1);
+        addProduct(data);
+    };
+};
+
+function getCountElementOnTable(pageCountElements, currentPage = 1){
+    $("#tbody").empty();
+    for(var i = (pageCountElements*currentPage) - (pageCountElements - 1); i <= currentPage * pageCountElements; i++){
+        var key = localStorage.key(i);
+        if(key != undefined){
+            if(key.includes("formData")){
+                var value = localStorage.getItem(key);
+                var product = JSON.parse(value);
+                addProduct(product);
+            } 
+        }  
+    }
+};
+
+function addPageNumbers(pageCountElements){
+    var countProducts = 0;
+    for(var i= 0; i < localStorage.length; i++){
+        var key = localStorage.key(i);
+        if(key.includes("formData")){
+            countProducts++;
+        }
+    }
+    var countPageNumber = 0;
+    if(countProducts % pageCountElements == 0)
+    {
+        countPageNumber = Math.floor(countProducts / pageCountElements);
+    } else {
+        countPageNumber = Math.floor(countProducts / pageCountElements) + 1;
+    }
+    for(var i = countPageNumber; i >= 1; i--){
+        $('#firstLi').after('<li class="page-item"><a class="page-link aPageLink">' + i + '</a></li>');
+    }
+};
