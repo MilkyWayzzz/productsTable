@@ -326,6 +326,7 @@ function addPageNumbers(pageCountElements){
     } else {
         countPageNumber = Math.floor(countProducts / pageCountElements) + 1;
     }
+    console.dir($("ul")[0].children.length);
     for(var i = countPageNumber; i >= 1; i--){
         $('#firstLi').after('<li class="page-item"><a class="page-link aPageLink">' + i + '</a></li>');
     }
